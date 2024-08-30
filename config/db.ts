@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const uri = "mongodb://127.0.0.1/airtimeDb";
+// const uri = process.env.MongoDB_URL! as any;
 
 export const dbConnect = async () => {
   try {
