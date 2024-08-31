@@ -19,8 +19,8 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: "http://localhost:1212",
-                description: "Local server",
+                url: "https://sub-sum.onrender.com",
+                description: "Development server",
             },
         ],
     },
