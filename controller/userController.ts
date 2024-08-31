@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import mongoose from "mongoose";
 import cloudinary from "../config/cloudinary";
+import "../config/auth";
 
 const jwtSecret = crypto.randomBytes(64).toString("hex");
 const JWT_SECRET = jwtSecret;

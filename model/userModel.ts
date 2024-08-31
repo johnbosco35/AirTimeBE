@@ -1,9 +1,9 @@
 import mongoose, { model, Schema, Document } from "mongoose";
 
-interface user extends Document {
+export interface user extends Document {
   name: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   accountStatus: "Active" | "InActive";
   referral_link: string;
   referral_code: string;
@@ -13,6 +13,7 @@ interface user extends Document {
   current_wallet_bonus: number;
   referrals: {}[];
   transactionHistory: {}[];
+  googleId: string;
 }
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,7 +26,7 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    // required: true,
   },
   accountStatus: {
     type: String,
@@ -33,12 +34,7 @@ const userSchema = new Schema({
   },
   phoneNumber: {
     type: String,
-    required: true,
-    unique: true,
-    match: [
-      phoneRegex,
-      "Please enter a valid Nigerian phone number (+234xxxxxxxxxx)",
-    ],
+    default: "",
   },
   email: {
     type: String,
@@ -62,6 +58,10 @@ const userSchema = new Schema({
   current_wallet_bonus: {
     type: Number,
     default: 0,
+  },
+  googleId: {
+    type: String,
+    // required: true,
   },
   userImage: {
     type: String,
