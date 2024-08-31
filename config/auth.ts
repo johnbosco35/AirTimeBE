@@ -2,6 +2,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import userModel from "../model/userModel";
 import crypto from "crypto";
+import { environmentVariables } from "../environment/environmentsVariables";
 
 const generateReferralCode = () => {
   return crypto.randomBytes(4).toString("hex");
@@ -15,9 +16,8 @@ const createReferralLink: any = (code: string) => {
 passport.use(
   new GoogleStrategy(
     {
-      clientID:
-        "294897360609-n4p28mh2bmvqch6nuriqhpr6ssmp20ai.apps.googleusercontent.com",
-      clientSecret: "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",
+      clientID: environmentVariables.CLIENT_URI || "",
+      clientSecret: environmentVariables.CLIENT_SECRET || "",
       callbackURL: "http://localhost:1212/google/callback",
       passReqToCallback: true,
     },

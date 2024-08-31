@@ -6,6 +6,7 @@ import YAML from "yamljs";
 import path from "path";
 import passport from "passport";
 import session from "express-session";
+import { swaggerSpec } from "./config/swagger";
 
 const app: Application = express();
 
@@ -23,13 +24,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// const swaggerDocs = YAML.load(
-//   //   path.join(__dirname, "..", "..", "docs", "documentation.yaml")
-//   path.join(__dirname, "..", "docs", "documentation.yaml")
-// );
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Swagger UI route
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// Use routes
 
 app.use(express.json());
 app.use("/api/v1/user", router);
