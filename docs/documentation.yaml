@@ -1,0 +1,534 @@
+openapi: 3.0.0
+info:
+  title: Troco App API
+  description: An API for managing users, groups, messages, transactions, and pricings in the Troco App
+  version: 1.0.0
+servers:
+  - url: https://troco-app-be-3.onrender.com/api/v1
+    description: Development server
+paths:
+  /createUser:
+    post:
+      summary: Create a new user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad request
+
+  /verifyotp/{id}:
+    post:
+      summary: Verify OTP for user
+      operationId: verifyOtp
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: number
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+
+  /resend-otp/{userId}:
+    post:
+      summary: Resend OTP for user
+      operationId: resendOtp
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+
+  /findoneuser/{userId}:
+    get:
+      summary: Find a user by ID
+      operationId: findOneUser
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Found user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+
+  /loginuser:
+    post:
+      summary: Log in user
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+
+  /searchuser:
+    post:
+      summary: Search for users
+      operationId: searchUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+      responses:
+        "200":
+          description: OK
+
+  /creategroup/{userId}:
+    post:
+      summary: Create a group
+      operationId: createGroup
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupInput"
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad request
+
+  /addUserToGroup:
+    patch:
+      summary: Add a user to a group
+      operationId: addUserToGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddUserToGroupInput"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+
+  /addMessageToGroup:
+    post:
+      summary: Add a message to a group
+      operationId: addMessageToGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddMessageToGroupInput"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+
+  /updateuser/{userId}:
+    patch:
+      summary: Update user information
+      operationId: updateUserInfo
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateInput"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+
+  /deleteuser/{userId}:
+    delete:
+      summary: Delete User
+      operationId: deleteUser
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deleted user successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+
+  /addtransactionPin/{userId}:
+    patch:
+      summary: Add transaction pin to user
+      operationId: createTransactionPin
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionPinInput"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+
+  /createtransaction/{userId}/{groupId}:
+    post:
+      summary: Create a transaction
+      operationId: createTransaction
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: groupId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionInput"
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad request
+
+  /createpricing/{userId}/{groupId}/{transactionId}/{memberId}:
+    post:
+      summary: Add pricing details to a transaction
+      operationId: addPricingToTransaction
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: groupId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: transactionId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PricingInput"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+  paths:
+  /updateTransactionStatus/{transactionId}/{userId}/{creatorId}:
+    post:
+      summary: Update transaction status
+      operationId: updateTransactionStatus
+      parameters:
+        - in: path
+          name: transactionId
+          required: true
+          schema:
+            type: string
+          description: The ID of the transaction to update
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+          description: The ID of the user performing the action
+        - in: path
+          name: creatorId
+          required: true
+          schema:
+            type: string
+          description: The ID of the creator of the transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [approved, declined]
+                  description: The new status of the transaction
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message indicating the status update was successful
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: An error message
+                  data:
+                    type: object
+                    description: Additional data about the error
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message indicating the resource was not found
+                  data:
+                    type: object
+                    description: Additional data about the error
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message indicating an internal server error occurred
+                  data:
+                    type: object
+                    description: Additional data about the error
+
+components:
+  schemas:
+    UserInput:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        phoneNumber:
+          type: string
+        referralCode:
+          type: string
+
+    LoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phoneNumber:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        address:
+          type: string
+        state:
+          type: string
+        city:
+          type: string
+        nearestBustop:
+          type: string
+        zipcode:
+          type: string
+        profile:
+          type: string
+        transactionPin:
+          type: integer
+        verificationPin:
+          type: integer
+
+    GroupInput:
+      type: object
+      properties:
+        groupName:
+          type: string
+        deadlineTime:
+          type: string
+        useDelivery:
+          type: boolean
+
+    AddUserToGroupInput:
+      type: object
+      properties:
+        userId:
+          type: string
+        groupId:
+          type: string
+        memberId:
+          type: string
+
+    AddMessageToGroupInput:
+      type: object
+      properties:
+        userId:
+          type: string
+        groupId:
+          type: string
+        content:
+          type: string
+
+    UserUpdateInput:
+      type: object
+      properties:
+        address:
+          type: string
+        state:
+          type: string
+        city:
+          type: string
+        nearestBustop:
+          type: string
+        zipcode:
+          type: string
+        profile:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+
+    TransactionPinInput:
+      type: object
+      properties:
+        transactionPin:
+          type: string
+
+    TransactionInput:
+      type: object
+      properties:
+        typeOftransaction:
+          type: string
+        transactionName:
+          type: string
+        aboutService:
+          type: string
+        location:
+          type: string
+        inspectionPeriod:
+          type: string
+        inspectionDays:
+          type: string
+        DateOfWork:
+          type: string
+
+    PricingInput:
+      type: object
+      properties:
+        category:
+          type: string
+        productName:
+          type: string
+        productCondition:
+          type: string
+        quantity:
+          type: number
+        price:
+          type: number
+        pricingImage:
+          type: string
+          format: binary
