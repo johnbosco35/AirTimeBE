@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 const jwtSecret = crypto.randomBytes(64).toString("hex");
 const JWT_SECRET = jwtSecret;
-const API_KEY_AIRTIME = "71|Fcnxs8GFGIz8TEmHEojrl2iksCudea0bfS6Xsopk";
+const AIRTIME_TO_CASH_RATE = 1.5;
 
 const generateReferralCode = () => {
   return crypto.randomBytes(4).toString("hex");
@@ -66,6 +66,7 @@ export const signUpUser = async (req: Request, res: Response) => {
 
       if (referrer) {
         referrer!.walletBalance += 300;
+        referrer.current_wallet_bonus = 300;
         referrer.referrals.push(new mongoose.Types.ObjectId(signUser._id));
         await referrer.save();
       }
@@ -162,6 +163,115 @@ export const fundWallet = async (req: Request, res: Response) => {
     return res.status(500).json({
       message: "An error occurred",
       error: error.message,
+    });
+  }
+};
+
+export const convertAirtimeToCash = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { airtimeAmount, network, phoneNumber, airtimeSharePin } = req.body;
+
+    // Validate the airtime amount
+    if (airtimeAmount <= 0) {
+      return res.status(400).json({
+        message: "Airtime amount must be greater than zero",
+      });
+    }
+
+    // Validate the required fields
+    if (!network || !phoneNumber || !airtimeSharePin) {
+      return res.status(400).json({
+        message: "Network, phone number, and airtime share pin are required",
+      });
+    }
+
+    // Find the user by ID
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // Calculate the cash value of the airtime
+    const cashAmount = airtimeAmount * AIRTIME_TO_CASH_RATE;
+
+    // Update the user's wallet balance
+    user.walletBalance += cashAmount;
+
+    // Save the updated user information
+    await user.save();
+
+    return res.status(200).json({
+      message: "Airtime converted to cash successfully",
+      walletBalance: user.walletBalance,
+      cashAmount: cashAmount,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "An error occurred",
+      error: error.message,
+    });
+  }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { oldpassword, newpassword } = req.body;
+
+    const getUser = await userModel.findById(userId);
+
+    if (!getUser) {
+      return res.status(404).send("User not found");
+    }
+
+    const compare = await bcrypt.compare(oldpassword, getUser!.password);
+
+    if (!compare) {
+      return res.status(404).json({
+        messge: "Wrong Input",
+      });
+    }
+
+    const Salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(newpassword, Salt);
+
+    getUser!.password = hashPassword;
+
+    await getUser.save();
+
+    return res.status(200).json({
+      message: "Password Updated Successfully",
+      data: getUser,
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      message: "An error occured",
+      data: error.message,
+    });
+  }
+};
+
+export const findOneUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await userModel
+      .findById(userId)
+      .populate("referrals")
+      .populate("transactionHistory");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+  } catch (error: any) {
+    return res.status(404).json({
+      message: "An error occured",
+      data: error.message,
     });
   }
 };
