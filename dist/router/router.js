@@ -1,21 +1,15 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // routes/userRoutes.ts
-import express from "express";
-import {
-  signUpUser,
-  loginUser,
-  fundWallet,
-  convertAirtimeToCash,
-  changePassword,
-  findOneUser,
-  uploadImage,
-} from "../controller/userController";
-import { swaggerUi, swaggerSpec } from "../config/swagger";
-
-const router = express.Router();
-
+const express_1 = __importDefault(require("express"));
+const userController_1 = require("../controller/userController");
+const swagger_1 = require("../config/swagger");
+const router = express_1.default.Router();
 // Serve Swagger UI
-router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+router.use("/api-docs", swagger_1.swaggerUi.serve, swagger_1.swaggerUi.setup(swagger_1.swaggerSpec));
 /**
  * @swagger
  * /createuser:
@@ -47,8 +41,7 @@ router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
  *       500:
  *         description: Server error
  */
-router.post("/createuser", signUpUser);
-
+router.post("/createuser", userController_1.signUpUser);
 /**
  * @swagger
  * /fund-wallet/{userId}:
@@ -80,8 +73,7 @@ router.post("/createuser", signUpUser);
  *       500:
  *         description: Server error
  */
-router.patch("/fund-wallet/:userId", fundWallet);
-
+router.patch("/fund-wallet/:userId", userController_1.fundWallet);
 /**
  * @swagger
  * /loginuser:
@@ -109,8 +101,7 @@ router.patch("/fund-wallet/:userId", fundWallet);
  *       500:
  *         description: Server error
  */
-router.post("/loginuser", loginUser);
-
+router.post("/loginuser", userController_1.loginUser);
 /**
  * @swagger
  * /one_user/{userId}:
@@ -131,8 +122,7 @@ router.post("/loginuser", loginUser);
  *       500:
  *         description: Server error
  */
-router.get("/one_user/:userId", findOneUser);
-
+router.get("/one_user/:userId", userController_1.findOneUser);
 /**
  * @swagger
  * /change_password/{userId}:
@@ -164,8 +154,7 @@ router.get("/one_user/:userId", findOneUser);
  *       500:
  *         description: Server error
  */
-router.patch("/change_password/:userId", changePassword);
-
+router.patch("/change_password/:userId", userController_1.changePassword);
 /**
  * @swagger
  * /convert_airtime_to_cash/{userId}:
@@ -203,8 +192,7 @@ router.patch("/change_password/:userId", changePassword);
  *       500:
  *         description: Server error
  */
-router.post("/convert_airtime_to_cash/:userId", convertAirtimeToCash);
-
+router.post("/convert_airtime_to_cash/:userId", userController_1.convertAirtimeToCash);
 /**
  * @swagger
  * /upload_image/{userId}:
@@ -263,8 +251,7 @@ router.post("/convert_airtime_to_cash/:userId", convertAirtimeToCash);
  *                   type: string
  *                   example: "An error occurred"
  */
-router.patch("/upload_image/:userId", uploadImage);
-
+router.patch("/upload_image/:userId", userController_1.uploadImage);
 /**
  * @swagger
  * /auth/google:
@@ -277,7 +264,6 @@ router.patch("/upload_image/:userId", uploadImage);
  *       500:
  *         description: Server error
  */
-
 /**
  * @swagger
  * /google/callback:
@@ -292,7 +278,6 @@ router.patch("/upload_image/:userId", uploadImage);
  *       500:
  *         description: Server error
  */
-
 /**
  * @swagger
  * /profile:
@@ -328,5 +313,4 @@ router.patch("/upload_image/:userId", uploadImage);
  *       500:
  *         description: Server error
  */
-
-export default router;
+exports.default = router;

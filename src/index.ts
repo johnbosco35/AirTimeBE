@@ -1,12 +1,12 @@
 import express, { Application } from "express";
-import { dbConnect } from "./config/db";
-import router from "./router/router";
+import { dbConnect } from "../config/db";
+import router from "../router/router";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
 import passport from "passport";
 import session from "express-session";
-import { swaggerSpec } from "./config/swagger";
+import { swaggerSpec } from "../config/swagger";
 
 const app: Application = express();
 
