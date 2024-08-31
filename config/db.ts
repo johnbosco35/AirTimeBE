@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-const uri = "mongodb://127.0.0.1/airtimeDb";
-// const uri = process.env.MongoDB_URL! as any;
+dotenv.config();
+
+// const uri = "mongodb://127.0.0.1/airtimeDb";
+const uri = process.env.MongoDB_URL! as any;
 
 export const dbConnect = async () => {
   try {
