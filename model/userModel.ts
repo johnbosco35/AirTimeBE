@@ -7,6 +7,7 @@ interface user extends Document {
   accountStatus: "Active" | "InActive";
   referral_link: string;
   referral_code: string;
+  userImage: string;
   password: string;
   walletBalance: number;
   current_wallet_bonus: number;
@@ -61,6 +62,9 @@ const userSchema = new Schema({
   current_wallet_bonus: {
     type: Number,
     default: 0,
+  },
+  userImage: {
+    type: String,
   },
   referrals: [
     {

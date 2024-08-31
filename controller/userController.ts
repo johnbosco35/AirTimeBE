@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import mongoose from "mongoose";
+import cloudinary from "../config/cloudinary";
 
 const jwtSecret = crypto.randomBytes(64).toString("hex");
 const JWT_SECRET = jwtSecret;
@@ -268,6 +269,38 @@ export const findOneUser = async (req: Request, res: Response) => {
         message: "User not found",
       });
     }
+
+    return res.status(200).json({
+      message: "User found successfully",
+      data: user,
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      message: "An error occured",
+      data: error.message,
+    });
+  }
+};
+
+export const uploadImage = async (req: any, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const cloudImg = await cloudinary.uploader.upload(req!.file!.path!);
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).send("user not found");
+    }
+
+    user.userImage = cloudImg!.secure_url;
+    await user.save;
+
+    return res.status(200).json({
+      message: "User found successfully",
+      data: user,
+    });
   } catch (error: any) {
     return res.status(404).json({
       message: "An error occured",
