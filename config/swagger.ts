@@ -13,12 +13,12 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://sub-sum.onrender.com/api/v1",
+        url: "https://sub-sum.onrender.com/api/v1/user",
         description: "Development server",
       },
     ],
   },
-  apis: [`${path.join("router", "router.ts")}`], 
+  apis: [`${path.join("router", "router.ts")}`],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);

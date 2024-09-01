@@ -19,7 +19,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: "https://sub-sum.onrender.com/api/v1",
+                url: "https://sub-sum.onrender.com/api/v1/user",
                 description: "Development server",
             },
         ],
