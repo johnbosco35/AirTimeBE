@@ -19,12 +19,12 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: "https://sub-sum.onrender.com",
+                url: "https://sub-sum.onrender.com/api/v1",
                 description: "Development server",
             },
         ],
     },
-    apis: [`${path_1.default.join("router", "router.ts")}`], // Path to your API route files
+    apis: [`${path_1.default.join("router", "router.ts")}`],
 };
 const swaggerSpec = (0, swagger_jsdoc_1.default)(swaggerOptions);
 exports.swaggerSpec = swaggerSpec;
